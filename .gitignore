@@ -1,0 +1,8 @@
+.venv
+.idea
+.env
+
+
+/french_tech/app_config_secret.py
+/french_tech/downloads
+

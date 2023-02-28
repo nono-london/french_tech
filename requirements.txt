@@ -1,0 +1,44 @@
+wheel
+pandas
+
+# web scrapping
+playwright
+lxml
+html5lib
+bs4
+
+
+
+
+
+# requirements for setup
+# https://medium.com/analytics-vidhya/how-to-create-a-python-library-7d5aea80cc3f
+# https://docs.python.org/3.7/distutils/setupscript.html
+twine
+setuptools
+
+
+# own wheels
+#\\thinkcentre\F_usb_buffalo\Python\own_wheels\postgresql_helpers-0.0.0.6-py3-none-any.whl
+#\\thinkcentre\F_usb_buffalo\Python\own_wheels\proxy_helpers-0.0.0.9-py3-none-any.whl
+#\\thinkcentre\F_usb_buffalo\Python\own_wheels\requests_helpers-0.0.2-py3-none-any.whl
+#\\thinkcentre\F_usb_buffalo\Python\own_wheels\selenium_helpers-0.0.0.11-py3-none-any.whl
+
+# commands for setup
+# python setup.py bdist_wheel
+# install wheel commands
+# pip install /path/to/wheelfile.whl
+
+
+# test commands:
+# python setup.py pytest
+pytest
+pytest-runner
+
+# python -m venv .venv
+
+# python -m pip install --upgrade pip
+# python.exe -m pip install --upgrade pip
+
+# pip install -r requirements.txt
+# pip install -r requirements.txt --upgrade
