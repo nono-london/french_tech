@@ -1,5 +1,7 @@
-from playwright.sync_api import Locator
 from urllib.parse import urljoin
+
+from playwright.sync_api import Locator
+from playwright.sync_api import TimeoutError as pw_TimeoutError
 
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class import Company
 
@@ -18,10 +20,55 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
     company.company_dr_url = urljoin(base_url, name_element.get_attribute(name="href"))
 
     # get other data
-    dr_signal_element = web_element.locator(
-        selector="xpath=// div[@class='table-list-columns'] // p[@class='ranking-bar-legend']", )
+    def shared_xpath(class_column_name: str):
+        return f"xpath=// div[@class='table-list-columns'] / div[contains(@class,'table-list-column {class_column_name}')] "
 
-    company.dealroom_signal = int(dr_signal_element.text_content().strip())
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="startupRankingRating") + "// p[@class='ranking-bar-legend']", )
+    company.dealroom_signal = int(element_to_find.text_content().strip())
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(
+            class_column_name="companyMarket") + " // div[@class='markets-column'] / ul[@class='item-list-column'] /li/a", ).all()
+    company.market = [element.text_content().strip() for element in element_to_find]
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(
+            class_column_name="type") + " // div[@class='business-type-column'] / ul[@class='item-list-column'] /li/a", ).all()
+    company.type = [element.text_content().strip() for element in element_to_find]
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(
+            class_column_name="companyEmployees") + " // div[@class='growth-line-chart'] // div[@class='growth-line-chart__content hbox'] // span", )
+    company.growth = element_to_find.first.text_content().strip()
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(
+            class_column_name="companyEmployees") + " // div[@class='growth-line-chart'] // div[@class='growth-line-chart__hover-content vbox'] // span", )
+    company.number_of_employees = element_to_find.first.text_content().strip()
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="launchDate") + " / time", )
+    company.launch_date = element_to_find.get_attribute(name="datetime").strip().split("T")[0]
+    try:
+        # needs a try as will not retrieve element if valuation is None
+        element_to_find = web_element.locator(
+            selector=shared_xpath(class_column_name="valuation") + " // span[@class='valuation__value']", )
+        company.valuation = element_to_find.text_content().strip()
+    except pw_TimeoutError:
+        pass
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="totalFunding"), )
+    company.funding = element_to_find.text_content().strip()
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="hqLocations"), )
+    company.location = element_to_find.text_content().strip()
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="lastFundingEnhanced"), )
+    company.last_round = element_to_find.text_content().strip()
 
     print(company)
 

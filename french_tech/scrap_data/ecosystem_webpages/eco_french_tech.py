@@ -37,7 +37,7 @@ with sync_playwright() as p:
     # https://playwright.dev/python/docs/locators#lists
     company_elements = page.locator("xpath=// div[@class='table-list-item']").all()
     print(f'Company names size: {len(company_elements)}')
-    print(f'Company names: {company_elements}')
+    # print(f'Company names: {company_elements}')
     for company_element in company_elements:
         scrap_company_info(web_element=company_element, base_url=DATA_URL)
 
