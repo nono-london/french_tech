@@ -1,5 +1,6 @@
 from urllib.parse import urljoin
 
+from bs4 import BeautifulSoup as bs
 from playwright.sync_api import Locator
 from playwright.sync_api import TimeoutError as pw_TimeoutError
 
@@ -13,7 +14,10 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
     """
     company = Company()
     print("-" * 150)
-    print(web_element.inner_html())
+
+    web_soup = bs(web_element.inner_html(), 'lxml')
+    print(web_soup.prettify())
+
     # get company name & url
     name_element = web_element.locator(
         selector="xpath=// div[@class='entity-name__info'] // a[@class='entity-name__name-text']", )
