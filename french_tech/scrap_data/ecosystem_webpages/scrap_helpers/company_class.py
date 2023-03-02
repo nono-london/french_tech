@@ -55,6 +55,22 @@ class Company:
 
         return string_rep
 
+    def __hash__(self):
+        return self.company_dr_url
+
+    def __eq__(self, other):
+        is_company: bool = isinstance(other, self.__class__)
+
+        if not is_company:
+            return False
+
+        # what to do in that case?
+        # should unsure that is never True
+        if self.company_dr_url == "" and other.company_dr_url == "":
+            return False
+
+        return self.company_dr_url == other.company_dr_url
+
 
 if __name__ == '__main__':
     my_company = Company()
