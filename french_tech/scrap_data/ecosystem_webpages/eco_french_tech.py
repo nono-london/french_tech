@@ -18,9 +18,9 @@ DEFAULT_TIMEOUT: int = 10_000  # milliseconds
 FILE_NAME: str = "french_startups.csv"
 
 
-def get_french_startups_data():
+def get_french_startups_data(headless: bool = True):
     with sync_playwright() as p:
-        browser = p.firefox.launch(timeout=30_000, headless=False)
+        browser = p.firefox.launch(timeout=30_000, headless=headless)
         page = browser.new_page()
 
         # Go to login page
@@ -107,4 +107,4 @@ def get_french_startups_data():
 
 
 if __name__ == '__main__':
-    get_french_startups_data()
+    get_french_startups_data(headless=True)
