@@ -1,8 +1,10 @@
-from playwright.sync_api import sync_playwright
-from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.cookie_popup import handle_cookie_popup
-from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.web_login import dealroom_login
-from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.scrap_company_row import scrap_company_info
 from random import randint
+
+from playwright.sync_api import sync_playwright
+
+from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.cookie_popup import handle_cookie_popup
+from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.scrap_company_row import scrap_company_info
+from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.web_login import dealroom_login
 
 LOGIN_URL: str = """https://app.dealroom.co/login?"""
 DATA_URL: str = """https://ecosystem.lafrenchtech.com/companies.startups/f/employees_max/anyof_100/launch_year_min/anyof_2019/locations/allof_France/startup_ranking_rating_min/anyof_1/total_funding_max/anyof_1000000?sort=startup_ranking_runners_up_rank"""
@@ -29,8 +31,18 @@ with sync_playwright() as p:
     page.wait_for_load_state(state="domcontentloaded", timeout=DEFAULT_TIMEOUT)
 
     # find out how many companies to retrieve
-    company_number_text: str = page.locator("xpath=// div[@class='table-info-bar__left']").text_content()
-    company_number: int = int(company_number_text.split("Showing")[-1].strip().split("startups")[0].strip())
+    company_number_text: str = page.locator("xpath=// div[@class='table-info-bar__left']").text_content(
+        timeout=DEFAULT_TIMEOUT)
+    max_tries: int = 5
+    while max_tries > 0:
+        try:
+            company_number: int = int(company_number_text.split("Showing")[-1].strip().split("startups")[0].strip())
+        except ValueError:
+            print(f'Not finding total number of companies available\n'
+                  f'Attempt left: {max_tries}')
+            page.wait_for_timeout(5_000)
+            max_tries += -1
+        break
 
     # select all table rows
 

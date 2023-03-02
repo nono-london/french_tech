@@ -70,6 +70,53 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
         selector=shared_xpath(class_column_name="lastFundingEnhanced"), )
     company.last_round = element_to_find.text_content().strip()
 
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="totalJobsAvailable"), )
+    company.number_job_opening = element_to_find.text_content().strip()
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="jobRoles"), )
+    company.job_board = element_to_find.text_content().strip()
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="revenue"), )
+    company.revenue = element_to_find.text_content().strip()
+    if company.revenue == "-":
+        company.revenue = None
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="companyStatus"), )
+    company.status = element_to_find.text_content().strip()
+
+    element_to_find = web_element.locator(
+        selector=shared_xpath(class_column_name="growthStage") + "/span/span", ).first
+    company.status = element_to_find.text_content().strip()
+
+    try:
+        element_to_find = web_element.locator(
+            selector=shared_xpath(
+                class_column_name="companyWebVisitsRank") + "// span[contains(@class,'delta')]", ).first
+        company.web_visits_chg_1Y = int(element_to_find.text_content().strip())
+    except (pw_TimeoutError, ValueError):
+        pass
+
+    try:
+        element_to_find = web_element.locator(
+            selector=shared_xpath(
+                class_column_name="companyEmployeesRank") + "// span[contains(@class,'delta')]", ).first
+        company.web_employees_chg_1Y = int(element_to_find.text_content().strip())
+    except (pw_TimeoutError, ValueError):
+        pass
+
+    try:
+        element_to_find = web_element.locator(
+            selector=shared_xpath(class_column_name="kpiMarketFirm") + "// span[@class='valuation__value']", ).first
+        company.enterprise_value = element_to_find.text_content().strip()
+    except pw_TimeoutError:
+        pass
+    if company.enterprise_value == '-':
+        company.enterprise_value = None
+
     print(company)
 
     return company

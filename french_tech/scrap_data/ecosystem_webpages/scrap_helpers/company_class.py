@@ -21,11 +21,13 @@ class Company:
         self.last_round: str = ""
         self.number_job_opening: str = ""
         self.job_board: str = ""
-        self.status: str = ""
+        self.revenue: Union[str, None] = None
 
+        self.status: str = ""
         self.growth_stage: str = ""
         self.web_visits_chg_1Y: Union[int, None] = None
         self.web_employees_chg_1Y: Union[int, None] = None
+        self.enterprise_value: Union[str, None] = None
 
     def __str__(self):
         """Handles the way the class Company is represented as a String and with the print() function"""
@@ -42,6 +44,13 @@ class Company:
                           f"funding: {self.funding}, " \
                           f"hqLocations: {self.location}, " \
                           f"last_round: {self.last_round}, " \
+                          f"number_job_opening: {self.number_job_opening}, " \
+                          f"job_board: {self.job_board}, " \
+                          f"revenue: {self.revenue}, " \
+                          f"growth_stage: {self.growth_stage}, " \
+                          f"web_visits_chg_1Y: {self.web_visits_chg_1Y}, " \
+                          f"web_employees_chg_1Y: {self.web_employees_chg_1Y}, " \
+                          f"enterprise_value: {self.enterprise_value}, " \
                           f")"
 
         return string_rep
