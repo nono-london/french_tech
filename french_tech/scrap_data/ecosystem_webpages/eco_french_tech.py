@@ -2,6 +2,7 @@ from random import randint
 
 from playwright.sync_api import sync_playwright
 
+from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class import Company
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.cookie_popup import handle_cookie_popup
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.scrap_company_row_with_lxml import \
     scrap_company_info as scrap_company_info_lxml
@@ -53,10 +54,15 @@ with sync_playwright() as p:
     print(f'Company names size: {len(company_elements)}')
     # print(f'Company names: {company_elements}')
 
+    companies_set: set = set()
     for index, company_element in enumerate(company_elements, start=1):
         print("-" * 50, f"Number: {index}", "-" * 50)
 
-        scrap_company_info_lxml(web_element=company_element, base_url=DATA_URL)
+        company: Company = scrap_company_info_lxml(web_element=company_element, base_url=DATA_URL)
+        companies_set.add(company)
 
+    # scroll down to get more records
+    print(f'company set:\n'
+          f'{list(companies_set)}')
     page.wait_for_timeout(10_000)
     browser.close()
