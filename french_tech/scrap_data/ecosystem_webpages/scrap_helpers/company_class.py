@@ -56,7 +56,7 @@ class Company:
         return string_rep
 
     def __hash__(self):
-        return self.company_dr_url
+        return hash(self.company_dr_url)
 
     def __eq__(self, other):
         is_company: bool = isinstance(other, self.__class__)
@@ -76,4 +76,6 @@ if __name__ == '__main__':
     my_company = Company()
     my_company.market = ['aksj', 'asalsk']
     my_company.market = [element for element in my_company.market]
-    print(my_company)
+    # print(my_company)
+    print(hash("iuiu"))
+    print(vars(my_company))
