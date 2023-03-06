@@ -9,10 +9,10 @@ pd.set_option('display.max_columns', None)
 
 # variables
 FILE_NAME: str = "2023-03-02_french_startups.csv"
-FILE_FULL_PATH: Path = Path(get_project_download_path(), FILE_NAME)
-COLUMN_TO_FILTER: str = 'type'
+COLUMN_TO_FILTER: str = 'market'
 
 # read previously saved scraped file
+FILE_FULL_PATH: Path = Path(get_project_download_path(), FILE_NAME)
 data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=FILE_FULL_PATH,
                                     converters={COLUMN_TO_FILTER: literal_eval})
 
