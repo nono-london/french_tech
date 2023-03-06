@@ -28,7 +28,7 @@ def create_sector_set(types_column: list):
     for sector_type in types_column:
         filter_keywords.add(sector_type)
 
-# filter all key words
+# filter all keywords
 data_df[COLUMN_TO_FILTER].apply(lambda x: create_sector_set(x))
 
 # sort keywords
