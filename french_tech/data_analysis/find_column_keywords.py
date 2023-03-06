@@ -28,9 +28,10 @@ def create_sector_set(types_column: list):
     for sector_type in types_column:
         filter_keywords.add(sector_type)
 
-
+# filter all key words
 data_df[COLUMN_TO_FILTER].apply(lambda x: create_sector_set(x))
 
+# sort keywords
 sorted(filter_keywords, reverse=False)
 
 # save available choices
@@ -39,3 +40,5 @@ save_path = Path(get_project_download_path(), f'column_to_filter_{COLUMN_TO_FILT
 column_choices_df.to_csv(path_or_buf=save_path,
                          sep=',',
                          index=False)
+
+print(f'Found {len(filter_keywords)} unique keywords for column: "{COLUMN_TO_FILTER}"')
