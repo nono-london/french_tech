@@ -1,4 +1,4 @@
-from ast import literal_eval
+from ast import literal_eval  # use to convert csv string list into type list
 from pathlib import Path
 
 import pandas as pd
