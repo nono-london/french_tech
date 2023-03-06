@@ -1,8 +1,10 @@
+from random import randint
+
 from playwright.sync_api import Page
 from playwright.sync_api import TimeoutError as pw_TimeoutError
-from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.cookie_popup import handle_cookie_popup
+
 from french_tech.app_config_secret import ECOSYSTEM_USERNAME, ECOSYSTEM_PWD
-from random import randint
+from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.cookie_popup import handle_cookie_popup
 
 
 def dealroom_login(web_page: Page, timeout: int = 10_000) -> bool:

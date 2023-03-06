@@ -1,4 +1,3 @@
-import logging
 from urllib.parse import urljoin
 
 from bs4 import BeautifulSoup as bs
