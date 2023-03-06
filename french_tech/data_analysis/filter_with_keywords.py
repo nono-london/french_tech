@@ -35,6 +35,7 @@ result_df = data_df[data_df[COLUMN_TO_FILTER].apply(lambda x: find_keyword(x))]
 # sort data
 result_df = result_df.sort_values(by=['name'], ascending=True, inplace=False)
 
+print("-" * 100)
 if len(result_df) == 0:
     exit(f'Did not find any data for keywords:\n{KEYWORDS_TO_USE}')
 else:
@@ -48,4 +49,7 @@ full_path_name = Path(get_project_download_path(), file_name)
 result_df.to_csv(path_or_buf=full_path_name,
                  sep=',',
                  index=False)
+
+# print report
+print("-" * 100)
 print(f'Dataset save in download folder with file name:\n   {file_name}')
