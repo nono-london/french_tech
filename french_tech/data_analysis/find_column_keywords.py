@@ -11,8 +11,12 @@ pd.set_option('display.max_columns', None)
 FILE_NAME: str = "2023-03-02_french_startups.csv"
 COLUMN_TO_FILTER: str = 'market'
 
-# read previously saved scraped file
+# check if file exists:
 FILE_FULL_PATH: Path = Path(get_project_download_path(), FILE_NAME)
+if not FILE_FULL_PATH.exists():
+    exit(f"File not found\nFile Name: {FILE_FULL_PATH}")
+
+# read previously saved scraped file
 data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=FILE_FULL_PATH,
                                     converters={COLUMN_TO_FILTER: literal_eval})
 
@@ -27,7 +31,7 @@ def create_sector_set(types_column: list):
 
 data_df[COLUMN_TO_FILTER].apply(lambda x: create_sector_set(x))
 
-sorted(filter_keywords)
+sorted(filter_keywords, reverse=False)
 
 # save available choices
 column_choices_df: pd.DataFrame = pd.DataFrame(data=list(filter_keywords), columns=[COLUMN_TO_FILTER])
