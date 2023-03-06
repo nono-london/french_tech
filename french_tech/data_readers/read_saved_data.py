@@ -12,8 +12,8 @@ pd.set_option('display.max_columns', None)
 
 def dataset_reader(file_name: str):
     # variables
-    list_columns: list = ['market', 'type']  # columns with list to be filtered on reduced to none duplicate
-    int_columns: list = ['dealroom_signal', 'web_visits_chg_1Y', 'web_employees_chg_1Y', ]
+    list_columns: list = ['market', 'type']  # columns with list
+    int_columns: list = ['web_visits_chg_1Y', 'web_employees_chg_1Y', ]  # columns with int
     # check if file exists:
     file_full_path: Path = Path(get_project_download_path(), file_name)
     if not file_full_path.exists():
@@ -25,7 +25,8 @@ def dataset_reader(file_name: str):
                       int_columns}
 
     data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_full_path,
-                                        converters={**converters_list, **converters_int})
+                                        converters={**converters_list, **converters_int},
+                                        )
     return data_df
 
 
