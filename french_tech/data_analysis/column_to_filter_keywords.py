@@ -9,7 +9,7 @@ pd.set_option('display.max_columns', None)
 
 # variables
 FILE_NAME: str = "2023-03-02_french_startups.csv"
-COLUMN_TO_FILTER: str = 'market'
+COLUMN_TO_FILTER: str = 'market'  # use "market" or "type"
 
 # check if file exists:
 FILE_FULL_PATH: Path = Path(get_project_download_path(), FILE_NAME)
@@ -28,6 +28,7 @@ def create_sector_set(types_column: list):
     for sector_type in types_column:
         filter_keywords.add(sector_type)
 
+
 # filter all keywords
 data_df[COLUMN_TO_FILTER].apply(lambda x: create_sector_set(x))
 
@@ -36,7 +37,7 @@ sorted(filter_keywords, reverse=False)
 
 # save available choices
 column_choices_df: pd.DataFrame = pd.DataFrame(data=list(filter_keywords), columns=[COLUMN_TO_FILTER])
-save_path = Path(get_project_download_path(), f'column_to_filter_{COLUMN_TO_FILTER}.csv')
+save_path = Path(get_project_download_path(), f'column_filter_{COLUMN_TO_FILTER}.csv')
 column_choices_df.to_csv(path_or_buf=save_path,
                          sep=',',
                          index=False)
