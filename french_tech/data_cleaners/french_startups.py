@@ -20,7 +20,7 @@ if not FILE_FULL_PATH.exists():
     exit(f"File not found\nFile Name: {FILE_FULL_PATH}")
 
 # read/load previously saved scraped file
-# TODO: need to take off the currency and nomial denominator first:ex: € , m
+# TODO: need to take off the currency and nominal denominator first:ex: € , m
 data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=FILE_FULL_PATH,
                                     converters={column_to_filter: literal_eval for column_to_filter in
                                                 COLUMNS_TO_FILTER})
