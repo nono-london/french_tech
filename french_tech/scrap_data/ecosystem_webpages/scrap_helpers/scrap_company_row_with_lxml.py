@@ -93,11 +93,19 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
     if company.revenue == "-":
         company.revenue = None
 
-    elements_to_find = tree.xpath(shared_xpath(class_column_name="companyStatus"), )
-    company.status = elements_to_find[0].text_content().strip()
+    # Company status
+    try:
+        elements_to_find = tree.xpath(shared_xpath(class_column_name="companyStatus"), )
+        company.status = elements_to_find[0].text_content().strip()
+    except IndexError as ex:
+        print(f'Company status not found.\nError:{ex}')
 
-    elements_to_find = tree.xpath(shared_xpath(class_column_name="growthStage") + "/span/span", )
-    company.status = elements_to_find[0].text_content().strip()
+    # growth_stage
+    try:
+        elements_to_find = tree.xpath(shared_xpath(class_column_name="growthStage") + "/span/span", )
+        company.status = elements_to_find[0].text_content().strip()
+    except IndexError as ex:
+        print(f'Growth Stage not found.\nError:{ex}')
 
     try:
         elements_to_find = tree.xpath(shared_xpath(
