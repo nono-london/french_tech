@@ -81,8 +81,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
             companies_set.add(company)
 
         # scroll down to get last results
-        max_tries: int = 10
-        while max_tries > 0:
+        while True:
             print("-" * 50, f"Total companies found: {len(companies_set)} ", "-" * 50)
 
             page.mouse.wheel(0, 1000)
