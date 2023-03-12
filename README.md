@@ -22,7 +22,5 @@ playwright install
 # Source of information
 ## Startups
 ### Free
-* flight-status.info
-* https://www.similarweb.com/website/airportia.com/competitors/
 
 ### Not free
