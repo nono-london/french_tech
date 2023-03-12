@@ -81,8 +81,10 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
             companies_set.add(company)
 
         # scroll down to get last results
-        while True:
+        max_tries: int = 10
+        while max_tries > 0:
             print("-" * 50, f"Total companies found: {len(companies_set)} ", "-" * 50)
+            temp_company_number: int = len(companies_set)
 
             page.mouse.wheel(0, 1000)
             page.wait_for_load_state(state="domcontentloaded", timeout=DEFAULT_TIMEOUT * 4)
@@ -98,8 +100,8 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
                 companies_set.add(company)
 
             # get out of the loop
-            if len(companies_set) >= company_number * .9:
-                break
+            if temp_company_number == len(companies_set):  # means that no new data were found
+                max_tries -= 1
 
         result_df = pd.DataFrame([vars(company) for company in companies_set])
         save_full_path = Path(get_project_download_path(), f"{datetime.utcnow().strftime('%Y-%m-%d')}_{file_name}")
