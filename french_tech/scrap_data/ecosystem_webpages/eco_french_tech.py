@@ -73,7 +73,6 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
         company_elements = page.locator("xpath=// div[@class='table-list-item']").all()
 
-
         # get first available rows (usually 25)
         for index, company_element in enumerate(company_elements, start=1):
             print("-" * 50, f"Number: {index}", "-" * 50)
@@ -84,7 +83,8 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
         # scroll down to get last results
         max_tries: int = 10
         while max_tries > 0:
-            print(f'Found {len(companies_set)} companies')
+            print("-" * 50, f"Total companies found: {len(companies_set)} ", "-" * 50)
+
             page.mouse.wheel(0, 1000)
             page.wait_for_load_state(state="domcontentloaded", timeout=DEFAULT_TIMEOUT * 4)
 
@@ -95,8 +95,6 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
             # get first available rows (usually 25)
             for index, company_element in enumerate(company_elements, start=1):
-                print("-" * 50, f"Number: {index}", "-" * 50)
-
                 company: Company = scrap_company_info_lxml(web_element=company_element, base_url=data_url)
                 companies_set.add(company)
 
