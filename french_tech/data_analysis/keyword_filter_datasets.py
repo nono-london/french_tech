@@ -17,17 +17,21 @@ COLUMNS_TO_FILTER: list = ['market', 'type']  # columns with list to be filtered
 
 # check if file exists:
 FILE_FULL_PATH: Path = Path(get_project_download_path(), FILE_NAME)
-if not FILE_FULL_PATH.exists():
-    exit(f"File not found\nFile Name: {FILE_FULL_PATH}")
-
-# read previously saved scraped file
-data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=FILE_FULL_PATH,
-                                    converters={column_to_filter: literal_eval for column_to_filter in
-                                                COLUMNS_TO_FILTER})
 
 
 def create_keywords_datasets():
     # create dataset of non-duplicate choices in column to filter
+
+    # check that file exists, if not stop process further
+    if not FILE_FULL_PATH.exists():
+        print(f"File not found\nFile Name: {FILE_FULL_PATH}")
+        return
+
+    # read previously saved scraped file
+    data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=FILE_FULL_PATH,
+                                        converters={column_to_filter: literal_eval for column_to_filter in
+                                                    COLUMNS_TO_FILTER})
+
     def create_sector_set(types_column: list):
         for sector_type in types_column:
             filter_keywords.add(sector_type)
