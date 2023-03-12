@@ -111,6 +111,10 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
             if temp_company_number == len(companies_set):  # means that no new data were found
                 max_tries -= 1
 
+        # print summary of companies found
+        print("-" * 50, "SUMMARY", "-" * 50)
+        print(F'Found {len(companies_set)} companies')
+
         result_df = pd.DataFrame([vars(company) for company in companies_set])
         save_full_path = Path(get_project_download_path(), f"{datetime.utcnow().strftime('%Y-%m-%d')}_{file_name}")
         result_df.to_csv(save_full_path, sep=',', index=False)
