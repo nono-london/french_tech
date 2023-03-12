@@ -8,19 +8,36 @@ Startups webscraper
 # Install
 ## Requirements
 Python 3.9
-## Playwright
+
+### Playwright
+
 https://playwright.dev/python/docs/intro
 
-follow these commands and use the requirements file:
+follow these commands:
+
 * First install requirements.txt with "playwright" in it
-* Then in commandline
+* Then in command line
+
 ```
 pip install pytest-playwright
+```
+
+```
 playwright install
 ```
 
+### Other requirements
+
+install other requirements from requirements.txt file using command line:
+
+```
+pip install -r requirements.txt
+```
+
 # Source of information
+
 ## Startups
+
 ### Free
 
 ### Not free
