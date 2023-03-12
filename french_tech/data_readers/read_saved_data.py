@@ -19,13 +19,14 @@ def dataset_reader(file_name: str):
     if not file_full_path.exists():
         exit(f"File not found\nFile Name: {file_full_path}")
 
-    converters_list = {column_to_filter: literal_eval for column_to_filter in
-                       list_columns}
-    converters_int = {column_to_filter: int for column_to_filter in
-                      int_columns}
+    converters_list: dict = {column_to_filter: literal_eval for column_to_filter in
+                             list_columns}
+    converters_int: dict = {column_to_filter: int for column_to_filter in
+                            int_columns}
+    converters_all: dict = {**converters_list, **converters_int}
 
     data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_full_path,
-                                        converters={**converters_list, **converters_int},
+                                        converters=converters_all,
                                         )
     return data_df
 
