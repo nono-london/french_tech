@@ -13,20 +13,12 @@ from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.scrap_company_row_w
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.web_login import dealroom_login
 
 LOGIN_URL: str = """https://app.dealroom.co/login?"""
+DATA_URL: str = """https://ecosystem.lafrenchtech.com/companies.startups/f/employees_max/anyof_100/launch_year_min/anyof_2019/locations/allof_France/startup_ranking_rating_min/anyof_1/total_funding_max/anyof_1000000?sort=startup_ranking_runners_up_rank"""
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
-FILE_NAME: str = "all_french_startups.csv"
+FILE_NAME: str = "french_startups.csv"
 
 
-def get_french_startups_data(headless: bool = True, all_data: bool = False):
-    """scrap datat from French tech website
-        headless: show or not the web browser
-        all_data: will scrap all data which have an HQ in France, Otherwise use default website filters
-    """
-    if all_data:
-        data_url: str = """https://ecosystem.lafrenchtech.com/companies.startups/f/locations/allof_France/startup_ranking_rating_min/anyof_1?sort=startup_ranking_runners_up_rank"""
-    else:
-        data_url: str = """https://ecosystem.lafrenchtech.com/companies.startups/f/employees_max/anyof_100/launch_year_min/anyof_2019/locations/allof_France/startup_ranking_rating_min/anyof_1/total_funding_max/anyof_1000000?sort=startup_ranking_runners_up_rank"""
-
+def get_french_startups_data(headless: bool = True):
     with sync_playwright() as p:
         browser = p.firefox.launch(timeout=30_000, headless=headless)
         page = browser.new_page()
@@ -39,7 +31,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
         page.wait_for_timeout(randint(5_000, 8_000))
 
         # Go to data page
-        page.goto(url=data_url, wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT * 2)
+        page.goto(url=DATA_URL, wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT * 2)
         print(f"Page title is: {page.title}")
 
         # close cookies pop up window
@@ -78,7 +70,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
         for index, company_element in enumerate(company_elements, start=1):
             print("-" * 50, f"Number: {index}", "-" * 50)
 
-            company: Company = scrap_company_info_lxml(web_element=company_element, base_url=data_url)
+            company: Company = scrap_company_info_lxml(web_element=company_element, base_url=DATA_URL)
             companies_set.add(company)
 
         # scroll down to get more records
@@ -102,7 +94,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
             for index, company_element in enumerate(company_elements, start=1):
                 print("-" * 50, f"Number: {index}", "-" * 50)
 
-                company: Company = scrap_company_info_lxml(web_element=company_element, base_url=data_url)
+                company: Company = scrap_company_info_lxml(web_element=company_element, base_url=DATA_URL)
                 companies_set.add(company)
 
             # get out of the loop
@@ -117,5 +109,4 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
 
 if __name__ == '__main__':
-    get_french_startups_data(headless=False,
-                             all_data=False)
+    get_french_startups_data(headless=True)
