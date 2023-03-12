@@ -34,6 +34,18 @@ install other requirements from requirements.txt file using command line:
 ```
 pip install -r requirements.txt
 ```
+# Use app from command line
+from root folder
+## scrap data
+on Windows:
+```
+python main.py
+```
+on Linux/Mac:
+```
+python3 main.py
+```
+
 # GIT command lines
 ## get latest version
 ```
