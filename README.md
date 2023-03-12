@@ -40,6 +40,7 @@ pip install -r requirements.txt
 git clone https://github.com/nono-london/french_tech.git
 ```
 ## update to the latest version
+depending of the name of your branch 'master' or 'origin'
 ```
 git pull origin master
 ```
