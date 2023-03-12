@@ -119,5 +119,5 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
 
 if __name__ == '__main__':
-    get_french_startups_data(headless=False,
+    get_french_startups_data(headless=True,
                              all_data=False)
