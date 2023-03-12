@@ -14,7 +14,6 @@ from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.web_login import de
 
 LOGIN_URL: str = """https://app.dealroom.co/login?"""
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
-FILE_NAME: str = "all_french_startups.csv"
 
 
 def get_french_startups_data(headless: bool = True, all_data: bool = False):
@@ -24,8 +23,10 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
     """
     if all_data:
         data_url: str = """https://ecosystem.lafrenchtech.com/companies.startups/f/locations/allof_France/startup_ranking_rating_min/anyof_1?sort=startup_ranking_runners_up_rank"""
+        file_name: str = "all_french_startups.csv"
     else:
         data_url: str = """https://ecosystem.lafrenchtech.com/companies.startups/f/employees_max/anyof_100/launch_year_min/anyof_2019/locations/allof_France/startup_ranking_rating_min/anyof_1/total_funding_max/anyof_1000000?sort=startup_ranking_runners_up_rank"""
+        file_name: str = "french_startups.csv"
 
     with sync_playwright() as p:
         browser = p.firefox.launch(timeout=30_000, headless=headless)
@@ -110,7 +111,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
                 break
 
         result_df = pd.DataFrame([vars(company) for company in companies_set])
-        save_full_path = Path(get_project_download_path(), f"{datetime.utcnow().strftime('%Y-%m-%d')}_{FILE_NAME}")
+        save_full_path = Path(get_project_download_path(), f"{datetime.utcnow().strftime('%Y-%m-%d')}_{file_name}")
         result_df.to_csv(save_full_path, sep=',', index=False)
         page.wait_for_timeout(10_000)
         browser.close()
