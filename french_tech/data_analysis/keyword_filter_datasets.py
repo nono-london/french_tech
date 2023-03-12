@@ -27,7 +27,7 @@ def _get_latest_dataset_path() -> Union[Path, None]:
         return files[-1]
 
 
-def create_keywords_datasets(use_latest_dataset: bool = False):
+def create_keywords_datasets(use_latest_dataset: bool = True):
     """create dataset of non-duplicate choices in column to filter"""
 
     # build default path:
@@ -73,4 +73,4 @@ def create_keywords_datasets(use_latest_dataset: bool = False):
 
 
 if __name__ == '__main__':
-    create_keywords_datasets()
+    create_keywords_datasets(use_latest_dataset=True)
