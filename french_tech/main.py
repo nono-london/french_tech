@@ -9,5 +9,5 @@ from french_tech.scrap_data.ecosystem_webpages.eco_french_tech import get_french
 
 if __name__ == '__main__':
     get_french_startups_data(headless=True,
-                             all_data=True)
+                             all_data=False)
     create_keywords_datasets()

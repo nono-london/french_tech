@@ -23,8 +23,8 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
     try:
         name_elements = tree.xpath("// div[@class='entity-name__info'] // a[@class='entity-name__name-text']")
         company.name = name_elements[0].text.strip()
-    except IndexError:
-        print(f'Company name not found')
+    except IndexError as ex:
+        print(f'Company name not found: {ex}')
         return company
 
     print(f'### Getting data for company: {company.name} ###')
@@ -158,7 +158,7 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
         elements_to_find = tree.xpath(shared_xpath(
             class_column_name="companyWebVisitsRank") + "// span[contains(@class,'delta')]", )
         company.web_visits_chg_1Y = int(elements_to_find[0].text_content().strip())
-    except (IndexError, ValueError):
+    except (IndexError, ValueError) as ex:
         print(f'companyWebVisitsRank not found.\nError:{ex}')
 
     # companyEmployeesRank
@@ -166,7 +166,7 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
         elements_to_find = tree.xpath(shared_xpath(
             class_column_name="companyEmployeesRank") + "// span[contains(@class,'delta')]", )
         company.web_employees_chg_1Y = int(elements_to_find[0].text_content().strip())
-    except (IndexError, ValueError):
+    except (IndexError, ValueError) as ex:
         print(f'companyEmployeesRank not found.\nError:{ex}')
 
     # valuation__value
@@ -176,7 +176,7 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
         company.enterprise_value = elements_to_find[0].text_content().strip()
         if company.enterprise_value == '-':
             company.enterprise_value = None
-    except IndexError:
+    except IndexError as ex:
         print(f'valuation__value not found.\nError:{ex}')
 
     # print(company)
