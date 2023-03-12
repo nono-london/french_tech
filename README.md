@@ -7,7 +7,9 @@ Startups webscraper
 
 # Install
 ## Requirements
-Python 3.9
+### Python version
+know to work with python versions:
+* Python 3.9
 
 ### Playwright
 
