@@ -15,20 +15,19 @@ pd.set_option('display.max_columns', None)
 FILE_NAME: str = "2023-03-02_french_startups.csv"
 COLUMNS_TO_FILTER: list = ['market', 'type']  # columns with list to be filtered on reduced to none duplicate
 
-# check if file exists:
-FILE_FULL_PATH: Path = Path(get_project_download_path(), FILE_NAME)
-
 
 def create_keywords_datasets():
     # create dataset of non-duplicate choices in column to filter
 
     # check that file exists, if not stop process further
-    if not FILE_FULL_PATH.exists():
-        print(f"File not found\nFile Name: {FILE_FULL_PATH}")
+    # build default path:
+    file_full_path: Path = Path(get_project_download_path(), FILE_NAME)
+    if not file_full_path.exists():
+        print(f"File not found\nFile Name: {file_full_path}")
         return
 
     # read previously saved scraped file
-    data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=FILE_FULL_PATH,
+    data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_full_path,
                                         converters={column_to_filter: literal_eval for column_to_filter in
                                                     COLUMNS_TO_FILTER})
 
