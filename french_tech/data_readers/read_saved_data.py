@@ -23,6 +23,7 @@ def dataset_reader(file_name: str):
                              list_columns}
     converters_int: dict = {column_to_filter: int for column_to_filter in
                             int_columns}
+    # merge all dicts
     converters_all: dict = {**converters_list, **converters_int}
 
     data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_full_path,
