@@ -46,7 +46,9 @@ def get_french_startups_data(headless: bool = True):
             try:
                 company_number_text: str = page.locator("xpath=// div[@class='table-info-bar__left']").text_content(
                     timeout=DEFAULT_TIMEOUT)
-                company_number: int = int(company_number_text.split("Showing")[-1].strip().split("startups")[0].strip())
+                company_number_text = company_number_text.split("Showing")[-1].strip().split("startups")[0].strip()
+                company_number_text = company_number_text.replace(".", "").replace(",", "")
+                company_number: int = int(company_number_text)
                 print(f'Found a total of {company_number} companies to retrieve info from')
                 break
             except ValueError:
