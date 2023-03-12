@@ -176,6 +176,6 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
     if company.enterprise_value == '-':
         company.enterprise_value = None
 
-    print(company)
+    # print(company)
 
     return company

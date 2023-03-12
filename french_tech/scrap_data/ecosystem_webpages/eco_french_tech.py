@@ -41,7 +41,6 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
         # Go to data page
         page.goto(url=data_url, wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT * 2)
-        print(f"Page title is: {page.title}")
 
         # close cookies pop up window
         handle_cookie_popup(web_page=page, timeout=DEFAULT_TIMEOUT)
@@ -73,7 +72,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
         companies_set: set = set()
 
         company_elements = page.locator("xpath=// div[@class='table-list-item']").all()
-        print(f'Company names size: {len(company_elements)}')
+
 
         # get first available rows (usually 25)
         for index, company_element in enumerate(company_elements, start=1):
@@ -82,14 +81,10 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
             company: Company = scrap_company_info_lxml(web_element=company_element, base_url=data_url)
             companies_set.add(company)
 
-        # scroll down to get more records
-        print(f'company set:\n'
-              f'{list(companies_set)}\n'
-              f'Company size: {len(companies_set)}')
-
         # scroll down to get last results
         max_tries: int = 10
         while max_tries > 0:
+            print(f'Found {len(companies_set)} companies')
             page.mouse.wheel(0, 1000)
             page.wait_for_load_state(state="domcontentloaded", timeout=DEFAULT_TIMEOUT * 4)
 
@@ -97,7 +92,6 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
             handle_cookie_popup(web_page=page, timeout=DEFAULT_TIMEOUT)
 
             company_elements = page.locator("xpath=// div[@class='table-list-item']").all()
-            print(f'Company names size: {len(company_elements)}')
 
             # get first available rows (usually 25)
             for index, company_element in enumerate(company_elements, start=1):
