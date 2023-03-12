@@ -35,7 +35,19 @@ install other requirements from requirements.txt file using command line:
 ```
 pip install -r requirements.txt
 ```
-
+# GIT command lines
+## get latest version
+```
+git clone https://github.com/nono-london/french_tech.git
+```
+## update to the latest version
+```
+git pull origin master
+```
+or
+```
+git pull origin main
+```
 # Source of information
 
 ## Startups
