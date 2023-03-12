@@ -48,10 +48,12 @@ def get_project_download_path() -> str:
 def pack_python_libs_in_path():
     """Adding manually libs that ae needed for the app to work"""
 
-    python_app_folder_path: Path = Path(get_project_root_path()).parent
-    if python_app_folder_path.parent not in sys.path:
-        sys.path.insert(1, str(python_app_folder_path.parent))
+    python_app_folder_path: Path = Path(get_project_root_path())
+    if str(python_app_folder_path) not in sys.path:
+        print(f'Syspath, adding: {str(python_app_folder_path)}')
+        sys.path.insert(1, str(python_app_folder_path))
 
+    python_app_folder_path: Path = Path(get_project_root_path()).parent
     # mysql_helpers_folder_path: Path = Path(python_app_folder_path, 'mysql_helpers')
     # print(mysql_helpers_folder_path)
     #
