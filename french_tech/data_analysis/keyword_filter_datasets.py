@@ -4,6 +4,7 @@
 
 from ast import literal_eval  # use to convert csv string list into type list
 from pathlib import Path
+from typing import Union
 
 import pandas as pd
 
@@ -16,15 +17,31 @@ FILE_NAME: str = "2023-03-02_french_startups.csv"
 COLUMNS_TO_FILTER: list = ['market', 'type']  # columns with list to be filtered on reduced to none duplicate
 
 
-def create_keywords_datasets():
-    # create dataset of non-duplicate choices in column to filter
+def _get_latest_dataset_path() -> Union[Path, None]:
+    """Get latest webscraped dataset by date """
+    # get all data files that match pattern
+    files: list[Path] = sorted(Path(get_project_download_path()).glob("*_french_startups.csv"))
+    if files is None or len(files) == 0:
+        return None
+    else:
+        return files[-1]
+
+
+def create_keywords_datasets(use_latest_dataset: bool = False):
+    """create dataset of non-duplicate choices in column to filter"""
+
+    # build default path:
+    if use_latest_dataset:
+        file_full_path: Path = _get_latest_dataset_path()
+    else:
+        file_full_path: Path = Path(get_project_download_path(), FILE_NAME)
 
     # check that file exists, if not stop process further
-    # build default path:
-    file_full_path: Path = Path(get_project_download_path(), FILE_NAME)
     if not file_full_path.exists():
         print(f"File not found\nFile Name: {file_full_path}")
         return
+    else:
+        print(f'Using dataset in file: {file_full_path.name}')
 
     # read previously saved scraped file
     data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_full_path,
