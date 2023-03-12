@@ -3,6 +3,7 @@ from pathlib import Path
 from random import randint
 
 import pandas as pd
+import tqdm
 from playwright.sync_api import sync_playwright
 
 from french_tech.app_config import get_project_download_path
@@ -50,6 +51,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
         # find out how many companies to retrieve
 
         max_tries: int = 5
+        company_number: int = -1
         while max_tries > 0:
             try:
                 company_number_text: str = page.locator("xpath=// div[@class='table-info-bar__left']").text_content(
@@ -65,7 +67,7 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
                 page.wait_for_timeout(5_000)
                 max_tries -= 1
 
-        if max_tries == 0:
+        if company_number == -1 or company_number is None:
             print(f'Problem while getting number of companies to retrieve')
             exit(0)
         # select all table rows
@@ -75,16 +77,21 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
         # get first available rows (usually 25)
         for index, company_element in enumerate(company_elements, start=1):
-            print("-" * 50, f"Number: {index}", "-" * 50)
-
             company: Company = scrap_company_info_lxml(web_element=company_element, base_url=data_url)
             companies_set.add(company)
 
         # scroll down to get last results
+        bar = tqdm.tqdm(total=company_number)
+        temp_company_number: int = len(companies_set)
         max_tries: int = 10
         while max_tries > 0:
-            print("-" * 50, f"Total companies found: {len(companies_set)} ", "-" * 50)
-            temp_company_number: int = len(companies_set)
+            print("-" * 120)
+            # print("-" * 50, f"Total companies found: {len(companies_set)} ", "-" * 50)
+            # Update the tqdm bar with the amount of new data
+            new_data: int = len(companies_set) - temp_company_number
+            bar.update(new_data)
+            # reset new_data
+            temp_company_number = len(companies_set)
 
             page.mouse.wheel(0, 1000)
             page.wait_for_load_state(state="domcontentloaded", timeout=DEFAULT_TIMEOUT * 4)
@@ -103,6 +110,10 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
             if temp_company_number == len(companies_set):  # means that no new data were found
                 max_tries -= 1
 
+        # print summary of companies found
+        print("-" * 50, "SUMMARY", "-" * 50)
+        print(F'Found {len(companies_set)} companies')
+
         result_df = pd.DataFrame([vars(company) for company in companies_set])
         save_full_path = Path(get_project_download_path(), f"{datetime.utcnow().strftime('%Y-%m-%d')}_{file_name}")
         result_df.to_csv(save_full_path, sep=',', index=False)
@@ -111,5 +122,5 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
 
 if __name__ == '__main__':
-    get_french_startups_data(headless=False,
+    get_french_startups_data(headless=True,
                              all_data=False)
