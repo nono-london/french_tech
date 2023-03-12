@@ -58,9 +58,13 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
         print(ex)
         # logging.exception(ex)
 
-    elements_to_find = tree.xpath(shared_xpath(class_column_name="launchDate") + " / time", )
-    company.launch_date = elements_to_find[0].attrib["datetime"].strip().split("T")[0]
-
+    # get launch date
+    try:
+        elements_to_find = tree.xpath(shared_xpath(class_column_name="launchDate") + " / time", )
+        company.launch_date = elements_to_find[0].attrib["datetime"].strip().split("T")[0]
+    except IndexError as ex:
+        print(f'Launch date not found, using default: 1900-01-01\nError is: {ex}')
+        company.launch_date = "1900-01-01"
     try:
         # needs a try as will not retrieve element if valuation is None
         elements_to_find = tree.xpath(
