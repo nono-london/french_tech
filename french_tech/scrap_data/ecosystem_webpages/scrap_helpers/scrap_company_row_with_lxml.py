@@ -62,21 +62,22 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
         company.type = [element.text.strip() for element in elements_to_find]
     except IndexError as ex:
         print(f'company business-type not found.\nError:{ex}')
-    # companyEmployees
+
+    # company growth
     try:
         elements_to_find = tree.xpath(shared_xpath(
             class_column_name="companyEmployees") + " // div[@class='growth-line-chart'] // div[contains(@class,'growth-line-chart__content')] // span[contains(@class,'growth-line-chart__value')]", )
         company.growth = elements_to_find[0].text_content().strip()
     except IndexError as ex:
-        print(f'company employees not found.\nError:{ex}')
+        print(f'company growth.\nError:{ex}')
 
-    # companyEmployees
+    # company growth
     try:
         elements_to_find = tree.xpath(shared_xpath(
             class_column_name="companyEmployees") + " // div[@class='growth-line-chart'] // div[contains(@class,'growth-line-chart__hover-content')] // span[contains(@class,'growth-line-chart__value')]", )
         company.number_of_employees = elements_to_find[0].text_content().strip()
     except IndexError as ex:
-        print(f'companyEmployees not found, using default: 1900-01-01\nError is: {ex}')
+        print(f'company growth not found\nError is: {ex}')
 
     # get launch date
     try:
@@ -158,23 +159,25 @@ def scrap_company_info(web_element: Locator, base_url: str) -> Company:
             class_column_name="companyWebVisitsRank") + "// span[contains(@class,'delta')]", )
         company.web_visits_chg_1Y = int(elements_to_find[0].text_content().strip())
     except (IndexError, ValueError):
-        pass
+        print(f'companyWebVisitsRank not found.\nError:{ex}')
 
+    # companyEmployeesRank
     try:
         elements_to_find = tree.xpath(shared_xpath(
             class_column_name="companyEmployeesRank") + "// span[contains(@class,'delta')]", )
         company.web_employees_chg_1Y = int(elements_to_find[0].text_content().strip())
     except (IndexError, ValueError):
-        pass
+        print(f'companyEmployeesRank not found.\nError:{ex}')
 
+    # valuation__value
     try:
         elements_to_find = tree.xpath(
             shared_xpath(class_column_name="kpiMarketFirm") + "// span[@class='valuation__value']", )
         company.enterprise_value = elements_to_find[0].text_content().strip()
+        if company.enterprise_value == '-':
+            company.enterprise_value = None
     except IndexError:
-        pass
-    if company.enterprise_value == '-':
-        company.enterprise_value = None
+        print(f'valuation__value not found.\nError:{ex}')
 
     # print(company)
 
