@@ -12,6 +12,9 @@ if __name__ == '__main__':
     get_french_startups_data(headless=True,
                              all_data=False,
                              print_errors=False)
+    create_keywords_datasets()
+
+    exit(0)
     print(f"Getting UNFILTERED DATA: expect about 10k+ companies")
     get_french_startups_data(headless=True,
                              all_data=True,
