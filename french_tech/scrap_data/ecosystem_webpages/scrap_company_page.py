@@ -4,6 +4,7 @@
         Twitter acct
         Linkedin acct
 """
+from datetime import datetime
 from pathlib import Path
 from typing import Union, List, Dict
 
@@ -67,13 +68,15 @@ def scrap_company_info(page: Page) -> Company:
     return company
 
 
-def get_company_info(headless: bool = True):
+def get_company_info(headless: bool = True,
+                     select_all_dataset: bool = True):
     # save path
-    save_path = Path(get_project_download_path(), "company_url_info.csv")
+    save_path = Path(get_project_download_path(), f"{datetime.now().strftime('%Y%m%d%H%M')}_company_url_info.csv")
 
     # load dataset
-    companies_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=_get_latest_dataset_path(only_select_all=False),
-                                             )
+    companies_df: pd.DataFrame = pd.read_csv(
+        filepath_or_buffer=_get_latest_dataset_path(only_select_all=select_all_dataset),
+        )
     # scrap data
     companies: List[Dict] = []
     with sync_playwright() as p:
@@ -102,8 +105,6 @@ def get_company_info(headless: bool = True):
                               "google_url": company.google_url,
                               "instagram_url": company.instagram_url,
                               })
-
-
 
     companies_df = pd.DataFrame(companies)
     companies_df.to_csv(path_or_buf=save_path,
