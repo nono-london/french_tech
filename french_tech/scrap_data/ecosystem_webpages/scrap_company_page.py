@@ -27,7 +27,7 @@ def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
     """
     # get all data files that match pattern
     if only_select_all:
-        files: list[Path] = sorted(Path(get_project_download_path()).glob("*_french_startups.csv"))
+        files: list[Path] = sorted(Path(get_project_download_path()).glob("*all_french_startups.csv"))
     else:
         files: list[Path] = sorted(Path(get_project_download_path()).glob("*_french_startups.csv"))
     if files is None or len(files) == 0:
