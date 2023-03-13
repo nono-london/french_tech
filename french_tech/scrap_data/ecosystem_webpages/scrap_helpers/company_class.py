@@ -7,6 +7,7 @@ class Company:
     def __init__(self):
         self.name: str = ""  # company name
         self.company_dr_url: str = ""  # company deal room URL
+        self.company_url: str = ""  # company URL
         self.dealroom_signal: Union[int, None] = None
         self.market: List[str] = []
         self.type: List[str] = []
@@ -29,11 +30,15 @@ class Company:
         self.web_employees_chg_1Y: Union[int, None] = None
         self.enterprise_value: Union[str, None] = None
 
+        self.twitter_url: Union[str, None] = None
+        self.linkedin_url: Union[str, None] = None
+
     def __str__(self):
         """Handles the way the class Company is represented as a String and with the print() function"""
         string_rep: str = f"Company(" \
                           f"name: {self.name}, " \
                           f"company_dr_url: {self.company_dr_url}, " \
+                          f"company_url: {self.company_url}, " \
                           f"dealroom_signal: {self.dealroom_signal}, " \
                           f"market: {self.market}, " \
                           f"type: {self.type}, " \
@@ -50,6 +55,8 @@ class Company:
                           f"growth_stage: {self.growth_stage}, " \
                           f"web_visits_chg_1Y: {self.web_visits_chg_1Y}, " \
                           f"web_employees_chg_1Y: {self.web_employees_chg_1Y}, " \
+                          f"enterprise_value: {self.enterprise_value}, " \
+                          f"twitter_url: {self.twitter_url}, " \
                           f"enterprise_value: {self.enterprise_value}, " \
                           f")"
 
