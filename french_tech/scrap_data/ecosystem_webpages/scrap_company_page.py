@@ -49,13 +49,19 @@ def scrap_company_info(page: Page) -> Company:
     except TimeoutError:
         return company
     for locator in locators:
-        url = locator.get_attribute("href")
+        url = locator.get_attribute("href").lower()
         if "twitter" in url:
             company.twitter_url = url
         elif "linkedin" in url:
             company.linkedin_url = url
         elif "facebook" in url:
             company.facebook_url = url
+        elif "apple" in url:
+            company.apple_url = url
+        elif "google" in url:
+            company.google_url = url
+        elif "instagram" in url:
+            company.instagram_url = url
         else:
             print(f"New url type found: {url}")
     return company
@@ -92,6 +98,9 @@ def get_company_info(headless: bool = True):
                               "twitter_url": company.twitter_url,
                               "linkedin_url": company.linkedin_url,
                               "facebook_url": company.facebook_url,
+                              "apple_url": company.apple_url,
+                              "google_url": company.google_url,
+                              "instagram_url": company.instagram_url,
                               })
 
 
