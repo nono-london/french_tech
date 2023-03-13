@@ -33,7 +33,9 @@ class Company:
         self.twitter_url: Union[str, None] = None
         self.linkedin_url: Union[str, None] = None
         self.facebook_url: Union[str, None] = None
-
+        self.apple_url: Union[str, None] = None
+        self.google_url: Union[str, None] = None
+        self.instagram_url: Union[str, None] = None
     def __str__(self):
         """Handles the way the class Company is represented as a String and with the print() function"""
         string_rep: str = f"Company(" \
@@ -60,6 +62,9 @@ class Company:
                           f"twitter_url: {self.twitter_url}, " \
                           f"linkedin_url: {self.linkedin_url}, " \
                           f"facebook_url: {self.facebook_url}, " \
+                          f"apple_url: {self.apple_url}, " \
+                          f"google_url: {self.google_url}, " \
+                          f"instagram_url: {self.instagram_url}, " \
                           f")"
 
         return string_rep
