@@ -29,8 +29,8 @@ def scrap_company_info(web_element: Locator,
         if print_errors:
             print(f'Company name not found: {ex}')
         return company
-
-    print(f'### Getting data for company: {company.name} ###')
+    if not print_errors:
+        print(f'### Getting data for company: {company.name} ###')
 
     # company URL
     try:
