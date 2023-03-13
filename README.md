@@ -60,6 +60,19 @@ or
 ```
 git pull origin main
 ```
+# Web Interface
+The web interface uses the streamlit library and is used for data visualization purposes
+## start the interface
+to start the web interface, type in the venv command line:
+on Windows
+```
+python -m streamlit run ./french_tech/main_streamlit.py
+```
+on Linux/mac
+```
+python3 -m streamlit run ./french_tech/main_streamlit.py
+```
+
 # Source of information
 
 ## Startups
