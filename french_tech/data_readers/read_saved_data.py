@@ -2,12 +2,31 @@
 
 from ast import literal_eval  # use to convert csv string list into type list
 from pathlib import Path
+from typing import Union, List
 
 import pandas as pd
 
 from french_tech.app_config import get_project_download_path
 
 pd.set_option('display.max_columns', None)
+
+
+def read_types() -> Union[List, None]:
+    file_path = Path(get_project_download_path(), "column_filter_type.csv")
+    if not file_path.exists():
+        print(f"File column_filter_type.csv not found")
+        return None
+    type_df = pd.read_csv(filepath_or_buffer=file_path)
+    return type_df["type"].values.tolist()
+
+
+def read_markets() -> Union[List, None]:
+    file_path = Path(get_project_download_path(), "column_filter_market.csv")
+    if not file_path.exists():
+        print(f"File column_filter_market.csv not found")
+        return None
+    type_df = pd.read_csv(filepath_or_buffer=file_path)
+    return type_df["market"].values.tolist()
 
 
 def dataset_reader(file_name: str):
@@ -36,5 +55,8 @@ def dataset_reader(file_name: str):
 
 
 if __name__ == '__main__':
+    print(read_types())
+    print(read_markets())
+
     FILE_NAME: str = "2023-03-12_french_startups.csv"
     print(dataset_reader(file_name=FILE_NAME))
