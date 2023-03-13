@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Union, List, Dict
 
 import pandas as pd
-from playwright.sync_api import sync_playwright, Page
+from playwright.sync_api import sync_playwright, Page, TimeoutError
 from tqdm import tqdm
 
 from french_tech.app_config import get_project_download_path
@@ -36,11 +36,17 @@ def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
 
 def scrap_company_info(page: Page) -> Company:
     company = Company()
-    locator = page.locator(selector="xpath=// div[@class='item-details-info__website'] / a")
-    company.company_url = locator.get_attribute("href")
+    try:
+        locator = page.locator(selector="xpath=// div[@class='item-details-info__website'] / a")
+        company.company_url = locator.get_attribute("href")
+    except TimeoutError:
+        return company
 
-    locators = page.locator(
-        selector="xpath=// div[@class='item-details-info__website'] / div[contains(@class,'resource-urls')] / a").all()
+    try:
+        locators = page.locator(
+            selector="xpath=// div[@class='item-details-info__website'] / div[contains(@class,'resource-urls')] / a").all()
+    except TimeoutError:
+        return company
     for locator in locators:
         url = locator.get_attribute("href")
         if "twitter" in url:
@@ -69,7 +75,8 @@ def get_company_info(headless: bool = True):
 
             # scrap data
             company = scrap_company_info(page=page)
-            companies.append({"company_url": company.company_url,
+            companies.append({"company_dr_url": row["company_dr_url"],
+                              "company_url": company.company_url,
                               "twitter_url": company.twitter_url,
                               "linkedin_url": company.linkedin_url,
                               "facebook_url": company.facebook_url,
