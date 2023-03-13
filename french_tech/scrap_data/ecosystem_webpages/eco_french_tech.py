@@ -19,7 +19,7 @@ DEFAULT_TIMEOUT: int = 10_000  # milliseconds
 
 def get_french_startups_data(headless: bool = True,
                              all_data: bool = False,
-                             print_errors:bool=True
+                             print_errors: bool = True
                              ):
     """scrap datat from French tech website
         headless: show or not the web browser
@@ -47,7 +47,9 @@ def get_french_startups_data(headless: bool = True,
         page.goto(url=data_url, wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT * 2)
 
         # close cookies pop up window
-        handle_cookie_popup(web_page=page, timeout=DEFAULT_TIMEOUT)
+        handle_cookie_popup(web_page=page,
+                            timeout=DEFAULT_TIMEOUT,
+                            print_errors=print_errors)
         # wait to load content
         page.wait_for_load_state(state="domcontentloaded", timeout=DEFAULT_TIMEOUT)
 
@@ -102,7 +104,9 @@ def get_french_startups_data(headless: bool = True,
             page.wait_for_load_state(state="domcontentloaded", timeout=DEFAULT_TIMEOUT * 4)
 
             # close cookies pop up window
-            handle_cookie_popup(web_page=page, timeout=DEFAULT_TIMEOUT)
+            handle_cookie_popup(web_page=page,
+                                timeout=DEFAULT_TIMEOUT,
+                                print_errors=print_errors)
 
             company_elements = page.locator("xpath=// div[@class='table-list-item']").all()
 
