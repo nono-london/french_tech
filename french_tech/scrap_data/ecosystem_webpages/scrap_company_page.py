@@ -36,7 +36,11 @@ def get_company_info():
 
         # Go to login page
         page.goto(url=DATA_URL, wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT)
-
+        locator = page.locator(selector="xpath=// div[@class='item-details-info__website'] / a")
+        print(locator.get_attribute("href"))
+        locators = page.locator(selector="xpath=// div[@class='item-details-info__website'] / div[contains(@class,'resource-urls')] / a").all()
+        for locator in locators:
+            print(locator.get_attribute("href"))
 
 if __name__ == '__main__':
     get_company_info()
