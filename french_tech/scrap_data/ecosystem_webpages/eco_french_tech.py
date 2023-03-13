@@ -64,7 +64,8 @@ def get_french_startups_data(headless: bool = True,
                 company_number_text = company_number_text.split("Showing")[-1].strip().split("startups")[0].strip()
                 company_number_text = company_number_text.replace(".", "").replace(",", "")
                 company_number: int = int(company_number_text)
-                print(f'Found a total of {company_number} companies to retrieve info from')
+                print("-" * 150)
+                print(f'Found a total of {company_number} companies to retrieve info from:\n')
                 break
             except ValueError:
                 print(f'Not finding total number of companies available\n'
