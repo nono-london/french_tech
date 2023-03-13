@@ -71,7 +71,11 @@ def get_company_info(headless: bool = True):
 
         for index, row in tqdm(companies_df.iterrows(), total=len(companies_df)):
             # Go to deal room company page
-            page.goto(url=row["company_dr_url"], wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT)
+            try:
+                page.goto(url=row["company_dr_url"], wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT)
+            except Exception as ex:
+                print(f"Error while getting info for company url: {row['company_dr_url']}\n"
+                      f"Error: {ex}")
 
             # scrap data
             company = scrap_company_info(page=page)
