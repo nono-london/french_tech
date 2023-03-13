@@ -92,7 +92,8 @@ def get_french_startups_data(headless: bool = True,
         temp_company_number: int = len(companies_set)
         max_tries: int = 10
         while max_tries > 0:
-            print("-" * 120)
+            if print_errors:
+                print("-" * 120)
             # print("-" * 50, f"Total companies found: {len(companies_set)} ", "-" * 50)
             # Update the tqdm bar with the amount of new data
             new_data: int = len(companies_set) - temp_company_number
