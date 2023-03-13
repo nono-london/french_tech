@@ -12,7 +12,7 @@ from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class impor
 
 def scrap_company_info(web_element: Locator,
                        base_url: str,
-                       print_errors:bool=True) -> Company:
+                       print_errors: bool = True) -> Company:
     """Scrap content of a row element representing company info and return it as a Company Class
 
         Return: Company Class
@@ -29,7 +29,8 @@ def scrap_company_info(web_element: Locator,
         if print_errors:
             print(f'Company name not found: {ex}')
         return company
-    if not print_errors:
+
+    if print_errors:
         print(f'### Getting data for company: {company.name} ###')
 
     # company URL
