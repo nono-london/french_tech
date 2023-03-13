@@ -124,6 +124,8 @@ def get_french_startups_data(headless: bool = True,
                 max_tries -= 1
 
         # print summary of companies found
+        bar.close()
+        print()
         print("-" * 50, "SUMMARY", "-" * 50)
         print(F'Found {len(companies_set)} companies')
 
@@ -136,4 +138,5 @@ def get_french_startups_data(headless: bool = True,
 
 if __name__ == '__main__':
     get_french_startups_data(headless=True,
-                             all_data=False)
+                             all_data=False,
+                             print_errors=False)
