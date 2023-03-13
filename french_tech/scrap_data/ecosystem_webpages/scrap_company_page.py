@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Union, List, Dict
 
 import pandas as pd
-from playwright.sync_api import sync_playwright, Page, TimeoutError
+from playwright.sync_api import (sync_playwright, Page,
+                                 TimeoutError, Error)
 from tqdm import tqdm
 
 from french_tech.app_config import get_project_download_path
@@ -61,9 +62,13 @@ def scrap_company_info(page: Page) -> Company:
 
 
 def get_company_info(headless: bool = True):
+    # save path
+    save_path = Path(get_project_download_path(), "company_url_info.csv")
+
+    # load dataset
     companies_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=_get_latest_dataset_path(only_select_all=False),
                                              )
-
+    # scrap data
     companies: List[Dict] = []
     with sync_playwright() as p:
         browser = p.firefox.launch(timeout=30_000, headless=headless)
@@ -73,6 +78,9 @@ def get_company_info(headless: bool = True):
             # Go to deal room company page
             try:
                 page.goto(url=row["company_dr_url"], wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT)
+            except Error as ex:
+                print(f"Error while getting info for company url: {row['company_dr_url']}")
+
             except Exception as ex:
                 print(f"Error while getting info for company url: {row['company_dr_url']}\n"
                       f"Error: {ex}")
@@ -86,8 +94,7 @@ def get_company_info(headless: bool = True):
                               "facebook_url": company.facebook_url,
                               })
 
-    # save data
-    save_path = Path(get_project_download_path(), "company_url_info.csv")
+
 
     companies_df = pd.DataFrame(companies)
     companies_df.to_csv(path_or_buf=save_path,
