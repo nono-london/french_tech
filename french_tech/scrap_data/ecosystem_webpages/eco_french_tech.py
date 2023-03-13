@@ -17,7 +17,10 @@ LOGIN_URL: str = """https://app.dealroom.co/login?"""
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
 
 
-def get_french_startups_data(headless: bool = True, all_data: bool = False):
+def get_french_startups_data(headless: bool = True,
+                             all_data: bool = False,
+                             print_errors:bool=True
+                             ):
     """scrap datat from French tech website
         headless: show or not the web browser
         all_data: will scrap all data which have an HQ in France, Otherwise use default website filters
@@ -77,7 +80,9 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
         # get first available rows (usually 25)
         for index, company_element in enumerate(company_elements, start=1):
-            company: Company = scrap_company_info_lxml(web_element=company_element, base_url=data_url)
+            company: Company = scrap_company_info_lxml(web_element=company_element,
+                                                       base_url=data_url,
+                                                       print_errors=print_errors)
             companies_set.add(company)
 
         # scroll down to get last results
@@ -103,7 +108,10 @@ def get_french_startups_data(headless: bool = True, all_data: bool = False):
 
             # get first available rows (usually 25)
             for index, company_element in enumerate(company_elements, start=1):
-                company: Company = scrap_company_info_lxml(web_element=company_element, base_url=data_url)
+                company: Company = scrap_company_info_lxml(web_element=company_element,
+                                                           base_url=data_url,
+                                                           print_errors=print_errors
+                                                           )
                 companies_set.add(company)
 
             # get out of the loop
