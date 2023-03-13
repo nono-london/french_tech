@@ -20,8 +20,15 @@ with right_column_row1:
 
 @st.cache_data
 def filter_dataset(markets: list, types: list) -> pd.DataFrame:
-    temp_df = DATA_DF[pd.DataFrame(DATA_DF['market'].tolist()).isin(markets).any(1).values]
-    temp_df = temp_df[pd.DataFrame(temp_df['type'].tolist()).isin(types).any(1).values]
+    """Returns dataset that have any markets AND any types selected (not OR)"""
+    if len(markets) > 0:
+        temp_df = DATA_DF[pd.DataFrame(DATA_DF['market'].tolist()).isin(markets).any(1).values]
+    else:
+        temp_df = DATA_DF
+    if len(types) > 0:
+        temp_df = temp_df[pd.DataFrame(temp_df['type'].tolist()).isin(types).any(1).values]
+    temp_df.reset_index(drop=True, inplace=True)
+
     return temp_df
 
 
