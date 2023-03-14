@@ -49,8 +49,14 @@ def scrap_company_info(page: Page) -> Company:
             selector="xpath=// div[@class='item-details-info__website'] / div[contains(@class,'resource-urls')] / a").all()
     except TimeoutError:
         return company
+    except Exception:
+        return company
     for locator in locators:
-        url = locator.get_attribute("href").lower()
+        try:
+            url = locator.get_attribute("href").lower()
+        except Exception:
+            continue
+
         if "twitter" in url:
             company.twitter_url = url
         elif "linkedin" in url:
