@@ -114,8 +114,8 @@ def get_company_info(headless: bool = True,
 
         for index, row in tqdm(companies_df.iterrows(), total=len(companies_df)):
             # skip if data already saved locally
-            if not check_company_info_exists(deal_room_url=row["company_dr_url"],
-                                             company_info_file_path=COMPANY_INFO_FILE_NAME):
+            if check_company_info_exists(deal_room_url=row["company_dr_url"],
+                                         company_info_file_path=COMPANY_INFO_FILE_NAME):
                 continue
 
             # Go to deal room company page
