@@ -51,6 +51,13 @@ def save_company_info(new_company_info_df: pd.DataFrame) -> pd.DataFrame:
         new_company_info_df = pd.concat([temp_df, new_company_info_df],
                                         ignore_index=True,
                                         )
+    # drop na
+    new_company_info_df.dropna(subset=["company_url"],
+                               inplace=True,
+                               )
+    # sort data
+    new_company_info_df.sort_values(by=["company_dr_url", "company_url"], inplace=True)
+
     # merge new df with old df
     new_company_info_df.drop_duplicates(subset=["company_dr_url"],
                                         inplace=True,
