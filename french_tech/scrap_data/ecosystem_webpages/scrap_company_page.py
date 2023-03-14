@@ -19,6 +19,7 @@ from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class impor
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
 
 DATA_URL: str = "https://ecosystem.lafrenchtech.com/companies/edtake"
+COMPANY_INFO_FILE_NAME: str = "company_url_info.csv"
 
 
 def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
@@ -34,6 +35,12 @@ def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
         return None
     else:
         return files[-1]
+
+
+def save_company_info():
+    """Save company info data, and keep first saved in case of duplicate
+     keeps previously saved data
+    """
 
 
 def scrap_company_info(page: Page) -> Company:
@@ -77,7 +84,7 @@ def scrap_company_info(page: Page) -> Company:
 def get_company_info(headless: bool = True,
                      select_all_dataset: bool = True):
     # save path
-    save_path = Path(get_project_download_path(), f"{datetime.now().strftime('%Y%m%d%H%M')}_company_url_info.csv")
+    save_path = Path(get_project_download_path(), f"{datetime.now().strftime('%Y%m%d%H%M')}_{COMPANY_INFO_FILE_NAME}")
 
     # load dataset
     companies_df: pd.DataFrame = pd.read_csv(
