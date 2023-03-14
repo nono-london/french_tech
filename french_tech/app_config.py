@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Union
 from urllib.error import URLError
 from urllib.request import Request, urlopen
-
+import pandas as pd
 
 def get_external_ip_address() -> Union[str, None]:
     """get external ip address"""
@@ -77,6 +77,14 @@ def pack_python_libs_in_path():
     #     sys.path.insert(1, str(selenium_folder_path))
 
 
+def g_sheet_company_info_url() -> str:
+    """Return the csv version of the PUBLISHED GSheet as a csv.
+        See File->Share-Publish to web on the GSheet
+    """
+    g_sheet_url = """https://docs.google.com/spreadsheets/d/e/2PACX-1vS2DmGW-VLUYEST5DD2G2Z8faRZWo3ghv4Vfd_i39wWZfQQRPwqZLlK920JIjkcrGtOkkM62wjy4VIF/pub?gid=149087946&single=true&output=csv"""
+    return g_sheet_url
+
+
 if __name__ == '__main__':
     # print(get_external_ip_address())
     #
@@ -84,5 +92,7 @@ if __name__ == '__main__':
     #
     # print(get_project_download_path())
 
+    # g_sheet_url = g_sheet_company_info_url().replace("/edit?usp=sharing", "/export?format=csv&gid=")
+    print(pd.read_csv(g_sheet_company_info_url()))
     pack_python_libs_in_path()
     print(sys.path)
