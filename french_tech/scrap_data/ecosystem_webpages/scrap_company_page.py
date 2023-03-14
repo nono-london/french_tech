@@ -2,7 +2,7 @@
     targeted info are:
         company website
         Twitter acct
-        Linkedin acct
+        LinkedIn acct
 """
 from datetime import datetime
 from pathlib import Path
@@ -22,7 +22,7 @@ DATA_URL: str = "https://ecosystem.lafrenchtech.com/companies/edtake"
 
 
 def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
-    """Get latest webscraped dataset by date
+    """Get the latest web scraped dataset by date
         only_select_all: if True
     """
     # get all data files that match pattern
@@ -76,7 +76,7 @@ def get_company_info(headless: bool = True,
     # load dataset
     companies_df: pd.DataFrame = pd.read_csv(
         filepath_or_buffer=_get_latest_dataset_path(only_select_all=select_all_dataset),
-        )
+    )
     # scrap data
     companies: List[Dict] = []
     with sync_playwright() as p:
@@ -87,7 +87,7 @@ def get_company_info(headless: bool = True,
             # Go to deal room company page
             try:
                 page.goto(url=row["company_dr_url"], wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT)
-            except Error as ex:
+            except Error:
                 print(f"Error while getting info for company url: {row['company_dr_url']}")
 
             except Exception as ex:
