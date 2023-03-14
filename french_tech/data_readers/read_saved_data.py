@@ -70,17 +70,15 @@ def check_company_info_exists(deal_room_url: str, company_info_file_path: Option
     if len(row_df) == 0:
         return False
     else:
-        if row_df.iloc[0]["company_url"] == "" or row_df.iloc[0]["company_url"] is None or math.isnan(
-                row_df.iloc[0]["company_url"]):
-            return False
-        else:
-
+        if isinstance(row_df.iloc[0]["company_url"], str):
             return True
+        else:
+            return False
 
 
 if __name__ == '__main__':
     print(check_company_info_exists(deal_room_url="https://ecosystem.lafrenchtech.com/companies/tim_tek"))
-
+    exit(0)
     print(read_types())
     print(read_markets())
 
