@@ -4,7 +4,6 @@
         Twitter acct
         LinkedIn acct
 """
-from datetime import datetime
 from pathlib import Path
 from typing import Union, List, Dict
 
@@ -14,11 +13,13 @@ from playwright.sync_api import (sync_playwright, Page,
 from tqdm import tqdm
 
 from french_tech.app_config import get_project_download_path
+from french_tech.data_readers.read_saved_data import check_company_info_exists
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class import Company
 
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
-
+SAVE_FREQUENCY: int = 25
 DATA_URL: str = "https://ecosystem.lafrenchtech.com/companies/edtake"
+COMPANY_INFO_FILE_NAME: str = "company_urls_info.csv"
 
 
 def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
@@ -34,6 +35,38 @@ def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
         return None
     else:
         return files[-1]
+
+
+def save_company_info(new_company_info_df: pd.DataFrame) -> pd.DataFrame:
+    """Save company info data, and keep first saved in case of duplicate
+     keeps previously saved data
+     Returns the amalgamated DataFrame
+    """
+    # check and read current saved file
+    file_path: Path = Path(get_project_download_path(), COMPANY_INFO_FILE_NAME)
+    if file_path.exists():
+        temp_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_path,
+                                            sep=',')
+
+        new_company_info_df = pd.concat([temp_df, new_company_info_df],
+                                        ignore_index=True,
+                                        )
+    # drop na
+    new_company_info_df.dropna(subset=["company_url"],
+                               inplace=True,
+                               )
+    # sort data
+    new_company_info_df.sort_values(by=["company_dr_url", "company_url"], inplace=True)
+
+    # merge new df with old df
+    new_company_info_df.drop_duplicates(subset=["company_dr_url"],
+                                        inplace=True,
+                                        keep='first',
+                                        ignore_index=True)
+    new_company_info_df.to_csv(path_or_buf=file_path,
+                               sep=",",
+                               index=False)
+    return new_company_info_df
 
 
 def scrap_company_info(page: Page) -> Company:
@@ -76,9 +109,6 @@ def scrap_company_info(page: Page) -> Company:
 
 def get_company_info(headless: bool = True,
                      select_all_dataset: bool = True):
-    # save path
-    save_path = Path(get_project_download_path(), f"{datetime.now().strftime('%Y%m%d%H%M')}_company_url_info.csv")
-
     # load dataset
     companies_df: pd.DataFrame = pd.read_csv(
         filepath_or_buffer=_get_latest_dataset_path(only_select_all=select_all_dataset),
@@ -90,6 +120,11 @@ def get_company_info(headless: bool = True,
         page = browser.new_page()
 
         for index, row in tqdm(companies_df.iterrows(), total=len(companies_df)):
+            # skip if data already saved locally
+            if check_company_info_exists(deal_room_url=row["company_dr_url"],
+                                         company_info_file_path=COMPANY_INFO_FILE_NAME):
+                continue
+
             # Go to deal room company page
             try:
                 page.goto(url=row["company_dr_url"], wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT)
@@ -111,18 +146,15 @@ def get_company_info(headless: bool = True,
                               "google_url": company.google_url,
                               "instagram_url": company.instagram_url,
                               })
-            # save every 100 results
-            if len(companies) % 100 == 0:
+            # save every SAVE_FREQUENCY results
+            if len(companies) % SAVE_FREQUENCY == 0:
                 companies_df = pd.DataFrame(companies)
-                companies_df.to_csv(path_or_buf=save_path,
-                                    sep=",",
-                                    index=False)
+                save_company_info(new_company_info_df=companies_df)
 
     companies_df = pd.DataFrame(companies)
-    companies_df.to_csv(path_or_buf=save_path,
-                        sep=",",
-                        index=False)
+    save_company_info(new_company_info_df=companies_df)
 
 
 if __name__ == '__main__':
-    get_company_info()
+    get_company_info(headless=True,
+                     select_all_dataset=False)

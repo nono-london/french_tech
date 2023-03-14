@@ -1,8 +1,9 @@
 """Read data from download folder and convert columns to their relevant types"""
 
+import math
 from ast import literal_eval  # use to convert csv string list into type list
 from pathlib import Path
-from typing import Union, List
+from typing import Union, List, Optional
 
 import pandas as pd
 
@@ -54,7 +55,30 @@ def dataset_reader(file_name: str):
     return data_df
 
 
+def check_company_info_exists(deal_room_url: str, company_info_file_path: Optional[str] = None) -> False:
+    """ Return True if company urls are already stored"""
+    if company_info_file_path is None:
+        company_info_file_path = "company_urls_info.csv"
+    file_path = Path(get_project_download_path(), company_info_file_path)
+
+    # if local file doesn't exist return False
+    if not file_path.exists():
+        return False
+
+    company_df: pd.datFrame = pd.read_csv(filepath_or_buffer=file_path, sep=',')
+    row_df = company_df.loc[company_df["company_dr_url"] == deal_room_url]
+    if len(row_df) == 0:
+        return False
+    else:
+        if isinstance(row_df.iloc[0]["company_url"], str):
+            return True
+        else:
+            return False
+
+
 if __name__ == '__main__':
+    print(check_company_info_exists(deal_room_url="https://ecosystem.lafrenchtech.com/companies/tim_tek"))
+    exit(0)
     print(read_types())
     print(read_markets())
 
