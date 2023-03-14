@@ -12,14 +12,15 @@ from playwright.sync_api import (sync_playwright, Page,
                                  TimeoutError, Error)
 from tqdm import tqdm
 
-from french_tech.app_config import get_project_download_path
+from french_tech.app_config import (get_project_download_path,
+                                    COMPANY_INFO_FILE_NAME,
+                                    init_datasets)
 from french_tech.data_readers.read_saved_data import check_company_info_exists
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class import Company
 
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
 SAVE_FREQUENCY: int = 25
 DATA_URL: str = "https://ecosystem.lafrenchtech.com/companies/edtake"
-COMPANY_INFO_FILE_NAME: str = "company_urls_info.csv"
 
 
 def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
@@ -108,7 +109,12 @@ def scrap_company_info(page: Page) -> Company:
 
 
 def get_company_info(headless: bool = True,
-                     select_all_dataset: bool = True):
+                     select_all_dataset: bool = True,
+                     force_update: bool = False):
+    # set datasets
+    if not force_update:
+        init_datasets()
+
     # load dataset
     companies_df: pd.DataFrame = pd.read_csv(
         filepath_or_buffer=_get_latest_dataset_path(only_select_all=select_all_dataset),

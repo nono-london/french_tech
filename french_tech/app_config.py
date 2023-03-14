@@ -4,7 +4,31 @@ from pathlib import Path
 from typing import Union
 from urllib.error import URLError
 from urllib.request import Request, urlopen
+
 import pandas as pd
+
+COMPANY_INFO_FILE_NAME: str = "company_urls_info.csv"
+
+
+def init_datasets():
+    # company urls info
+    company_urls_path: Path = Path(get_project_download_path(), COMPANY_INFO_FILE_NAME)
+    if not company_urls_path.exists():
+        company_urls_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=g_sheet_company_info_url())
+        company_urls_df.to_csv(path_or_buf=company_urls_path,
+                               sep=',',
+                               index=False
+                               )
+    # french tech companies
+
+    companies_path: Path = Path(get_project_download_path(), "1900-01-01_all_french_startups.csv")
+    if not companies_path.exists():
+        company_urls_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=g_sheet_companies())
+        company_urls_df.to_csv(path_or_buf=companies_path,
+                               sep=',',
+                               index=False
+                               )
+
 
 def get_external_ip_address() -> Union[str, None]:
     """get external ip address"""
@@ -85,14 +109,15 @@ def g_sheet_company_info_url() -> str:
     return g_sheet_url
 
 
-if __name__ == '__main__':
-    # print(get_external_ip_address())
-    #
-    # print(get_project_root_path())
-    #
-    # print(get_project_download_path())
+def g_sheet_companies() -> str:
+    """Return the csv version of the PUBLISHED GSheet as a csv.
+        See File->Share-Publish to web on the GSheet
+    """
+    g_sheet_url = """https://docs.google.com/spreadsheets/d/e/2PACX-1vS2DmGW-VLUYEST5DD2G2Z8faRZWo3ghv4Vfd_i39wWZfQQRPwqZLlK920JIjkcrGtOkkM62wjy4VIF/pub?gid=1957905855&single=true&output=csv"""
+    return g_sheet_url
 
-    # g_sheet_url = g_sheet_company_info_url().replace("/edit?usp=sharing", "/export?format=csv&gid=")
-    print(pd.read_csv(g_sheet_company_info_url()))
+
+if __name__ == '__main__':
+    init_datasets()
     pack_python_libs_in_path()
     print(sys.path)
