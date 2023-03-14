@@ -16,7 +16,7 @@ from french_tech.app_config import get_project_download_path
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class import Company
 
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
-
+SAVE_FREQUENCY: int = 25
 DATA_URL: str = "https://ecosystem.lafrenchtech.com/companies/edtake"
 COMPANY_INFO_FILE_NAME: str = "company_urls_info.csv"
 
@@ -133,8 +133,8 @@ def get_company_info(headless: bool = True,
                               "google_url": company.google_url,
                               "instagram_url": company.instagram_url,
                               })
-            # save every 100 results
-            if len(companies) % 100 == 0:
+            # save every SAVE_FREQUENCY results
+            if len(companies) % SAVE_FREQUENCY == 0:
                 companies_df = pd.DataFrame(companies)
                 save_company_info(new_company_info_df=companies_df)
 
