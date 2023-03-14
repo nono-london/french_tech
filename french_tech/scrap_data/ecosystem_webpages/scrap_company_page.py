@@ -13,6 +13,7 @@ from playwright.sync_api import (sync_playwright, Page,
 from tqdm import tqdm
 
 from french_tech.app_config import get_project_download_path
+from french_tech.data_readers.read_saved_data import check_company_info_exists
 from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class import Company
 
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
@@ -112,6 +113,11 @@ def get_company_info(headless: bool = True,
         page = browser.new_page()
 
         for index, row in tqdm(companies_df.iterrows(), total=len(companies_df)):
+            # skip if data already saved locally
+            if not check_company_info_exists(deal_room_url=row["company_dr_url"],
+                                             company_info_file_path=COMPANY_INFO_FILE_NAME):
+                continue
+
             # Go to deal room company page
             try:
                 page.goto(url=row["company_dr_url"], wait_until="domcontentloaded", timeout=DEFAULT_TIMEOUT)
