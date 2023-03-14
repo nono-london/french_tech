@@ -88,6 +88,7 @@ def amalgamate_french_startups(save_locally_as_all: bool = True) -> pd.DataFrame
         result_df.to_csv(path_or_buf="1900-01-01_all_french_startups.csv",
                          sep=",",
                          index=False)
+    result_df.reset_index(drop=True, inplace=True)
     return result_df
 
 
@@ -95,20 +96,25 @@ def amalgamate_company_info(save_locally_as_all: bool = True) -> pd.DataFrame:
     file_paths: List[Path] = list(Path(get_project_download_path()).glob("*company_urls_info.csv"))
     print(file_paths)
     french_startups_dfs: List[pd.DataFrame] = [pd.read_csv(filepath_or_buffer=path) for path in file_paths]
-    result_df = pd.concat(objs=french_startups_dfs, ignore_index=True)
 
-    result_df.sort_values(by=result_df.columns, inplace=True)
+    result_df = pd.concat(objs=french_startups_dfs,
+                          ignore_index=True)
+
+    result_df.sort_values(by=list(result_df.columns), inplace=True)
 
     result_df.drop_duplicates(subset=["company_dr_url"], inplace=True, keep='last')
     if save_locally_as_all:
-        result_df.to_csv(path_or_buf="1900-01-01_all_french_startups.csv",
+        result_df.to_csv(path_or_buf="1900-01-01_company_urls_info.csv",
                          sep=",",
                          index=False)
+    result_df.reset_index(drop=True, inplace=True)
     return result_df
 
 
 if __name__ == '__main__':
-    amalgamate_french_startups()
+    # print(amalgamate_french_startups(save_locally_as_all=True))
+    # exit(0)
+    amalgamate_company_info(save_locally_as_all=True)
     exit(0)
 
     print(check_company_info_exists(deal_room_url="https://ecosystem.lafrenchtech.com/companies/tim_tek"))
