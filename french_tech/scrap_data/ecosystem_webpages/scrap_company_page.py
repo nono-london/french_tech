@@ -111,12 +111,12 @@ def get_company_info(headless: bool = True,
                               "google_url": company.google_url,
                               "instagram_url": company.instagram_url,
                               })
-    # save every 100 results
-    if len(companies) % 100 == 0:
-        companies_df = pd.DataFrame(companies)
-        companies_df.to_csv(path_or_buf=save_path,
-                            sep=",",
-                            index=False)
+            # save every 100 results
+            if len(companies) % 100 == 0:
+                companies_df = pd.DataFrame(companies)
+                companies_df.to_csv(path_or_buf=save_path,
+                                    sep=",",
+                                    index=False)
 
     companies_df = pd.DataFrame(companies)
     companies_df.to_csv(path_or_buf=save_path,
