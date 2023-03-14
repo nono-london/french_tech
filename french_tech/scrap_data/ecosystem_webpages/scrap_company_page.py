@@ -4,7 +4,6 @@
         Twitter acct
         LinkedIn acct
 """
-from datetime import datetime
 from pathlib import Path
 from typing import Union, List, Dict
 
@@ -19,7 +18,7 @@ from french_tech.scrap_data.ecosystem_webpages.scrap_helpers.company_class impor
 DEFAULT_TIMEOUT: int = 10_000  # milliseconds
 
 DATA_URL: str = "https://ecosystem.lafrenchtech.com/companies/edtake"
-COMPANY_INFO_FILE_NAME: str = "company_url_info.csv"
+COMPANY_INFO_FILE_NAME: str = "company_urls_info.csv"
 
 
 def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
@@ -37,10 +36,29 @@ def _get_latest_dataset_path(only_select_all: bool) -> Union[Path, None]:
         return files[-1]
 
 
-def save_company_info():
+def save_company_info(new_company_info_df: pd.DataFrame) -> pd.DataFrame:
     """Save company info data, and keep first saved in case of duplicate
      keeps previously saved data
+     Returns the amalgamated DataFrame
     """
+    # check and read current saved file
+    file_path: Path = Path(get_project_download_path(), COMPANY_INFO_FILE_NAME)
+    if file_path.exists():
+        temp_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_path,
+                                            sep=',')
+
+        new_company_info_df = pd.concat([temp_df, new_company_info_df],
+                                        ignore_index=True,
+                                        )
+    # merge new df with old df
+    new_company_info_df.drop_duplicates(subset=["company_dr_url"],
+                                        inplace=True,
+                                        keep='first',
+                                        ignore_index=True)
+    new_company_info_df.to_csv(path_or_buf=file_path,
+                               sep=",",
+                               index=False)
+    return new_company_info_df
 
 
 def scrap_company_info(page: Page) -> Company:
@@ -83,9 +101,6 @@ def scrap_company_info(page: Page) -> Company:
 
 def get_company_info(headless: bool = True,
                      select_all_dataset: bool = True):
-    # save path
-    save_path = Path(get_project_download_path(), f"{datetime.now().strftime('%Y%m%d%H%M')}_{COMPANY_INFO_FILE_NAME}")
-
     # load dataset
     companies_df: pd.DataFrame = pd.read_csv(
         filepath_or_buffer=_get_latest_dataset_path(only_select_all=select_all_dataset),
@@ -121,14 +136,10 @@ def get_company_info(headless: bool = True,
             # save every 100 results
             if len(companies) % 100 == 0:
                 companies_df = pd.DataFrame(companies)
-                companies_df.to_csv(path_or_buf=save_path,
-                                    sep=",",
-                                    index=False)
+                save_company_info(new_company_info_df=companies_df)
 
     companies_df = pd.DataFrame(companies)
-    companies_df.to_csv(path_or_buf=save_path,
-                        sep=",",
-                        index=False)
+    save_company_info(new_company_info_df=companies_df)
 
 
 if __name__ == '__main__':
