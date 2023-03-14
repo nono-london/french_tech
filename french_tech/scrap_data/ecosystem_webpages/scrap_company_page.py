@@ -143,4 +143,5 @@ def get_company_info(headless: bool = True,
 
 
 if __name__ == '__main__':
-    get_company_info()
+    get_company_info(headless=True,
+                     select_all_dataset=False)
