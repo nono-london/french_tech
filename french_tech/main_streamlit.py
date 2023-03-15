@@ -21,17 +21,19 @@ DATA_DF = init_streamlit_datasets()
 
 st.title("Company Search")
 
-left_col_row1, right_column_row1 = st.columns(2)
-with left_col_row1:
+row1_col1, row1_col2, row1_col3 = st.columns(3)
+with row1_col1:
     selected_markets: list = st.multiselect(label="Company Markets",
                                             options=read_markets())
-with right_column_row1:
+with row1_col2:
     selected_types: list = st.multiselect(label="Company Types",
                                           options=read_types())
-
+with row1_col3:
+    selected_status: list = st.multiselect(label="Company Status",
+                                           options=sorted(set(DATA_DF['status'].values.tolist())))
 
 @st.cache_data
-def filter_dataset(markets: list, types: list) -> pd.DataFrame:
+def filter_dataset(markets: list, types: list, status:list) -> pd.DataFrame:
     """Returns dataset that have any markets AND any types selected (not OR)"""
     if len(markets) > 0:
         temp_df = DATA_DF[pd.DataFrame(DATA_DF['market'].tolist()).isin(markets).any(1).values]
@@ -39,11 +41,18 @@ def filter_dataset(markets: list, types: list) -> pd.DataFrame:
         temp_df = DATA_DF
     if len(types) > 0:
         temp_df = temp_df[pd.DataFrame(temp_df['type'].tolist()).isin(types).any(1).values]
+    if len(status)>0:
+        temp_df = temp_df[pd.DataFrame(temp_df['status'].tolist()).isin(status).any(1).values]
     temp_df.reset_index(drop=True, inplace=True)
 
     return temp_df
 
 
-st.dataframe(filter_dataset(markets=selected_markets,
-                            types=selected_types)
-             )
+streamlit_df = filter_dataset(markets=selected_markets,
+                              types=selected_types,
+                              status=selected_status)
+
+
+
+st.write(f"Found {len(streamlit_df)} results")
+st.dataframe(streamlit_df)
