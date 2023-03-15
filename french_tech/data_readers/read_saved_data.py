@@ -6,6 +6,8 @@ from typing import Union, List, Optional
 
 import pandas as pd
 
+from french_tech.app_config import (g_sheet_company_info_url,
+                                    g_sheet_companies)
 from french_tech.app_config import get_project_download_path
 
 pd.set_option('display.max_columns', None)
@@ -78,8 +80,12 @@ def check_company_info_exists(deal_room_url: str, company_info_file_path: Option
 def amalgamate_french_startups(save_locally: bool = True) -> pd.DataFrame:
     file_paths: List[Path] = list(Path(get_project_download_path()).glob("*french_startups.csv"))
     print(file_paths)
+    # get local copies
     french_startups_dfs: List[pd.DataFrame] = [pd.read_csv(filepath_or_buffer=path) for path in file_paths]
-    result_df = pd.concat(objs=french_startups_dfs, ignore_index=True)
+    # get g_sheet copy
+    gsheet_df = pd.read_csv(filepath_or_buffer=g_sheet_companies())
+    # merge datasets
+    result_df = pd.concat(objs=[gsheet_df] + french_startups_dfs, ignore_index=True)
 
     result_df.sort_values(by=["company_dr_url"], inplace=True)
 
@@ -96,10 +102,12 @@ def amalgamate_french_startups(save_locally: bool = True) -> pd.DataFrame:
 def amalgamate_company_info(save_locally: bool = True) -> pd.DataFrame:
     file_paths: List[Path] = list(Path(get_project_download_path()).glob("*company_urls_info.csv"))
     print(file_paths)
-    french_startups_dfs: List[pd.DataFrame] = [pd.read_csv(filepath_or_buffer=path) for path in file_paths]
-
-    result_df = pd.concat(objs=french_startups_dfs,
-                          ignore_index=True)
+    # get local copies
+    company_info_dfs: List[pd.DataFrame] = [pd.read_csv(filepath_or_buffer=path) for path in file_paths]
+    # get g_sheet copy
+    gsheet_df = pd.read_csv(filepath_or_buffer=g_sheet_company_info_url())
+    # merge datasets
+    result_df = pd.concat(objs=[gsheet_df] + company_info_dfs, ignore_index=True)
 
     result_df.sort_values(by=list(result_df.columns), inplace=True)
 
@@ -114,9 +122,9 @@ def amalgamate_company_info(save_locally: bool = True) -> pd.DataFrame:
 
 
 if __name__ == '__main__':
-    # print(amalgamate_french_startups(save_locally_as_all=True))
-    # exit(0)
-    amalgamate_company_info(save_locally=True)
+    print(amalgamate_french_startups(save_locally=True))
+
+    print(amalgamate_company_info(save_locally=True))
     exit(0)
 
     print(check_company_info_exists(deal_room_url="https://ecosystem.lafrenchtech.com/companies/tim_tek"))
