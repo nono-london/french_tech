@@ -96,6 +96,8 @@ def amalgamate_french_startups(save_locally: bool = True) -> pd.DataFrame:
                          sep=",",
                          index=False)
     result_df.reset_index(drop=True, inplace=True)
+    result_df["market"] = result_df["market"].apply(eval)
+    result_df["type"] = result_df["type"].apply(eval)
     return result_df
 
 

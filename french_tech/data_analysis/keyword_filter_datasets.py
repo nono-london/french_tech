@@ -9,11 +9,10 @@ from typing import Union
 import pandas as pd
 
 from french_tech.app_config import get_project_download_path
-
+from french_tech.data_readers.read_saved_data import amalgamate_french_startups
 pd.set_option('display.max_columns', None)
 
 # variables
-FILE_NAME: str = "2023-03-02_french_startups.csv"
 COLUMNS_TO_FILTER: list = ['market', 'type']  # columns with list to be filtered on reduced to none duplicate
 
 
@@ -27,26 +26,10 @@ def _get_latest_dataset_path() -> Union[Path, None]:
         return files[-1]
 
 
-def create_keywords_datasets(use_latest_dataset: bool = True):
+def create_keywords_datasets():
     """create dataset of non-duplicate choices in column to filter"""
-
-    # build default path:
-    if use_latest_dataset:
-        file_full_path: Path = _get_latest_dataset_path()
-    else:
-        file_full_path: Path = Path(get_project_download_path(), FILE_NAME)
-
-    # check that file exists, if not stop process further
-    if not file_full_path.exists():
-        print(f"File not found\nFile Name: {file_full_path}")
-        return
-    else:
-        print(f'Using dataset in file: {file_full_path.name}')
-
     # read previously saved scraped file
-    data_df: pd.DataFrame = pd.read_csv(filepath_or_buffer=file_full_path,
-                                        converters={column_to_filter: literal_eval for column_to_filter in
-                                                    COLUMNS_TO_FILTER})
+    data_df: pd.DataFrame = amalgamate_french_startups(save_locally=True)
 
     def create_sector_set(types_column: list):
         for sector_type in types_column:
@@ -73,4 +56,4 @@ def create_keywords_datasets(use_latest_dataset: bool = True):
 
 
 if __name__ == '__main__':
-    create_keywords_datasets(use_latest_dataset=True)
+    create_keywords_datasets()

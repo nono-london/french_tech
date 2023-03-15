@@ -1,13 +1,23 @@
 import pandas as pd
 import streamlit as st
 
-from french_tech.data_readers.read_saved_data import amalgamate_french_startups
-from french_tech.data_readers.read_saved_data import (
-    read_markets,
-    read_types)
+from french_tech.data_analysis.keyword_filter_datasets import create_keywords_datasets
+from french_tech.data_readers.read_saved_data import (amalgamate_french_startups,
+                                                      read_markets,
+                                                      read_types)
+
+
+# create_keywords_datasets
 
 # gather data from web and local copies
-DATA_DF = amalgamate_french_startups(save_locally=True)
+@st.cache_data
+def init_streamlit_datasets():
+    dataset = amalgamate_french_startups(save_locally=True)
+    create_keywords_datasets()
+    return dataset
+
+
+DATA_DF = init_streamlit_datasets()
 
 st.title("Company Search")
 
