@@ -1,11 +1,13 @@
 import pandas as pd
 import streamlit as st
 
-from french_tech.data_readers.read_saved_data import (dataset_reader,
-                                                      read_markets,
-                                                      read_types)
+from french_tech.data_readers.read_saved_data import amalgamate_french_startups
+from french_tech.data_readers.read_saved_data import (
+    read_markets,
+    read_types)
 
-DATA_DF = dataset_reader("1900-01-01_all_french_startups.csv")
+# gather data from web and local copies
+DATA_DF = amalgamate_french_startups(save_locally=True)
 
 st.title("Company Search")
 
