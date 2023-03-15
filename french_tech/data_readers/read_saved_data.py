@@ -123,7 +123,30 @@ def amalgamate_company_info(save_locally: bool = True) -> pd.DataFrame:
     return result_df
 
 
+def read_gsheet_company_info() -> pd.DataFrame:
+    list_columns: list = ['market', 'type']  # columns with list
+    converters_list: dict = {column_to_filter: literal_eval for column_to_filter in
+                             list_columns}
+    result_df = pd.read_csv(filepath_or_buffer=g_sheet_company_info_url(),
+                            converters=converters_list
+                            )
+    return result_df
+
+
+def read_gsheet_frenchtech_startups() -> pd.DataFrame:
+    list_columns: list = ['market', 'type']  # columns with list
+    converters_list: dict = {column_to_filter: literal_eval for column_to_filter in
+                             list_columns}
+    result_df = pd.read_csv(filepath_or_buffer=g_sheet_companies(),
+                            converters=converters_list
+                            )
+    return result_df
+
+
 if __name__ == '__main__':
+    print(read_gsheet_frenchtech_startups())
+    exit(0)
+
     print(amalgamate_french_startups(save_locally=True))
 
     print(amalgamate_company_info(save_locally=True))
