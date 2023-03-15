@@ -5,7 +5,7 @@ from french_tech.data_readers.read_saved_data import (dataset_reader,
                                                       read_markets,
                                                       read_types)
 
-DATA_DF = dataset_reader("2023-03-12_french_startups.csv")
+DATA_DF = dataset_reader("1900-01-01_all_french_startups.csv")
 
 st.title("Company Search")
 
